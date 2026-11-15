@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کلاس آنلاین | اتاق آموزشی استاد فاطمه بادامیان بنه کهل</title>
+    <!-- فونت وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- تیلویند CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- آیکون‌های Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- اسکریپت رسمی ارتباط ویدیویی و صوتی زنده Jitsi Meet -->
+    <script src="https://meet.jit.si/external_api.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'Tahoma', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            950: '#070b14',
+                            900: '#0d1424',
+                            800: '#152036',
+                            700: '#1f2e4d',
+                            600: '#2b3f66',
+                        },
+                        cyan: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            background-color: #070b14;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d1424;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2e4d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+        .laser-dot {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle, #ffffff 10%, #ef4444 50%, rgba(239, 68, 68, 0) 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 12px 4px rgba(239, 68, 68, 0.85);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 40;
+            display: none;
+        }
+        .glass-card {
+            background: rgba(13, 20, 36, 0.88);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(34, 211, 238, 0.16);
+        }
+        .session-menu-btn {
+            padding: .35rem .7rem; border-radius: .55rem; font-size: 11px; color: #cbd5e1;
+            border: 1px solid transparent; white-space: nowrap; transition: .18s;
+        }
+        .session-menu-btn:hover { background: #152036; color: #fff; border-color: #2b3f66; }
+        .modal-backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(6px); }
+    </style>
+</head>
+<body class="h-screen flex flex-col select-none">
+
+    <!-- سیستم نمایش اعلان (Toast Notification) -->
+    <div id="toastContainer" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none w-11/12 max-w-md"></div>
+
+    <!-- ===================================================================== -->
+    <!-- ۱. صفحه ورود و لابی کلاس (Login / Lobby Screen)                        -->
+    <!-- ===================================================================== -->
+    <section id="lobbyScreen" class="fixed inset-0 z-50 bg-navy-950 flex items-center justify-center p-4 overflow-y-auto">
+        <!-- افکت‌های نوری پس‌زمینه -->
+        <div class="fixed top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="fixed bottom-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="glass-card w-full max-w-xl rounded-3xl p-6 sm:p-8 shadow-2xl relative z-10 my-auto">
+            <!-- لوگو و عنوان اختصاصی استاد -->
+            <div class="flex flex-col items-center text-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/25 mb-3">
+                    <!-- لوگوی SVG اختصاصی -->
+                    <svg class="w-9 h-9 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-cyan-400 text-xs font-semibold mb-2">
+                    پلتفرم جامع کلاس‌های آنلاین و وبینار
+                </span>
+                <h1 class="text-lg sm:text-2xl font-extrabold text-white leading-snug">
+                    سامانه آموزش آنلاین استاد فاطمه بادامیان بنه کهل
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1">
+                    ارتباط زنده صوتی و تصویری • تخته سفید هوشمند • اشتراک جزوه و اسلاید
+                </p>
+            </div>
+
+            <!-- انتخاب نقش کاربر -->
+            <div class="mb-5">
+                <label class="block text-xs font-medium text-slate-300 mb-2">نقش خود را برای ورود به کلاس انتخاب کنید:</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <button type="button" onclick="selectRole('teacher')" id="roleBtnTeacher"
+                        class="flex items-center gap-3 p-3 rounded-2xl border-2 border-cyan-500 bg-cyan-500/15 text-right transition">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500 text-navy-950 flex items-center justify-center shrink-0">
+                            <i data-lucide="award" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs sm:text-sm font-bold text-white">ورود به عنوان استاد</div>
+                            <div class="text-[11px] text-cyan-300">فاطمه بادامیان بنه کهل</div>
+                        </div>
+                    </button>
+
+                    <button type="button" onclick="selectRole('student')" id="roleBtnStudent"
+                        class="flex items-center gap-3 p-3 rounded-2xl border-2 border-navy-700 bg-navy-900 hover:border-navy-600 text-right transition">
+                        <div class="w-10 h-10 rounded-xl bg-navy-800 text-slate-300 flex items-center justify-center shrink-0">
+                            <i data-lucide="user-check" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs sm:text-sm font-bold text-slate-200">ورود به عنوان دانشجو</div>
+                            <div class="text-[11px] text-slate-400">فراگیر / شرکت‌کننده</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- فرم اطلاعات ورود -->
+            <form onsubmit="enterClassroom(event)" class="space-y-4">
+                <!-- فیلدهای مخصوص استاد -->
+                <div id="teacherFields" class="space-y-3">
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">نام نمایشی استاد در کلاس:</label>
+                        <input type="text" id="teacherNameInput" value="استاد فاطمه بادامیان بنه کهل" readonly
+                            class="w-full bg-navy-900/90 border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-sm text-cyan-300 font-semibold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">رمز مدیریت کلاس (اختیاری - فقط برای رابط کاربری؛ امنیت واقعی سرور نیست):</label>
+                        <input type="password" id="teacherPassInput" placeholder="این رمز در این فایل به‌صورت امن اعتبارسنجی سروری نمی‌شود..."
+                            class="w-full bg-navy-900 border border-navy-700 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition">
+                    </div>
+                </div>
+
+                <!-- فیلدهای مخصوص دانشجو -->
+                <div id="studentFields" class="hidden space-y-3">
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">نام و نام خانوادگی دانشجو <span class="text-red-400">*</span>:</label>
+                        <input type="text" id="studentNameInput" placeholder="مثلاً: زهرا احمدی"
+                            class="w-full bg-navy-900 border border-navy-700 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition">
+                    </div>
+                </div>
+
+                <!-- وضعیت امنیت و دسترسی رسانه -->
+                <div id="mediaPermissionPanel" class="mb-4 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-3">
+                    <div class="flex items-start gap-2">
+                        <div id="mediaPermissionIcon" class="mt-0.5 text-amber-300">
+                            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div id="mediaPermissionTitle" class="text-xs font-bold text-amber-200">بررسی دسترسی دوربین و میکروفون</div>
+                            <p id="mediaPermissionText" class="text-[11px] text-slate-400 mt-1 leading-5">
+                                برای کلاس ویدیویی، مرورگر باید اجازه استفاده از دوربین و میکروفون را داشته باشد. در GitHub Pages این صفحه با HTTPS اجرا می‌شود.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <button type="button" onclick="checkMediaPermissionStatus(true)" class="px-2.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-[11px] font-semibold">
+                                    بررسی / درخواست دسترسی
+                                </button>
+                                <button type="button" onclick="showBrowserPermissionHelp()" class="px-2.5 py-1.5 rounded-lg bg-navy-800 hover:bg-navy-700 border border-navy-700 text-slate-300 text-[11px]">
+                                    راهنمای رفع مجوز
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- انتخاب یا وارد کردن نام کلاس -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">انتخاب از لیست کلاس‌های آماده:</label>
+                        <select id="presetClassSelect" onchange="applyPresetClass()"
+                            class="w-full bg-navy-900 border border-navy-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:outline-none">
+                            <option value="کلاس تخصصی استاد فاطمه بادامیان">کلاس تخصصی استاد فاطمه بادامیان</option>
+                            <option value="کارگاه آموزشی ویژه (گروه الف)">کارگاه آموزشی ویژه (گروه الف)</option>
+                            <option value="جلسه رفع اشکال و پرسش و پاسخ">جلسه رفع اشکال و پرسش و پاسخ</option>
+                            <option value="وبینار علمی و پژوهشی">وبینار علمی و پژوهشی</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">عنوان / شناسه اتاق کلاس:</label>
+                        <input type="text" id="roomNameInput" value="کلاس تخصصی استاد فاطمه بادامیان" required
+                            class="w-full bg-navy-900 border border-navy-700 focus:border-cyan-500 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- دکمه‌های عملیاتی ورود و کپی لینک دعوت -->
+                <div class="pt-2 flex flex-col sm:flex-row gap-2.5">
+                    <button type="submit"
+                        class="flex-1 py-3 px-5 rounded-xl bg-gradient-to-l from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 transition cursor-pointer">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        <span>ورود به محیط کلاس آنلاین</span>
+                    </button>
+
+                    <button type="button" onclick="copyInviteLink()"
+                        class="py-3 px-4 rounded-xl bg-navy-800 hover:bg-navy-700 border border-navy-600 text-cyan-300 text-xs sm:text-sm font-medium flex items-center justify-center gap-2 transition cursor-pointer">
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                        <span>کپی لینک دعوت کلاس</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ۲. محیط اصلی کلاس مجازی (Main Classroom Interface)                    -->
+    <!-- ===================================================================== -->
+    <div id="classroomApp" class="hidden flex-col h-screen overflow-hidden">
+
+        <!-- الف) هدر بالایی (Header) -->
+        <header class="h-14 bg-navy-900 border-b border-navy-700 px-3 sm:px-5 flex items-center justify-between shrink-0 z-20">
+            <!-- سمت راست: برند و مشخصات کلاس -->
+            <div class="flex items-center gap-2.5 overflow-hidden">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shrink-0 shadow">
+                    <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+                </div>
+                <div class="truncate">
+                    <div class="flex items-center gap-2">
+                        <h2 id="headerRoomTitle" class="text-xs sm:text-sm font-bold text-white truncate">کلاس تخصصی استاد فاطمه بادامیان</h2>
+                        <span class="hidden md:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 shrink-0">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            آنلاین
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-cyan-400 truncate">مدرس: استاد فاطمه بادامیان بنه کهل</p>
+                </div>
+            </div>
+
+            <!-- مرکز: تایمر زنده کلاس -->
+            <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1.5 bg-navy-800 px-3 py-1.5 rounded-xl border border-navy-700 text-xs sm:text-sm font-mono text-cyan-300">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    <span id="classTimer">00:00:00</span>
+                </div>
+            </div>
+
+            <!-- سمت چپ: دکمه پنل کناری (موبایل) و خروج ایمن -->
+            <div class="flex items-center gap-2">
+                <button onclick="copyInviteLink()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-navy-800 hover:bg-navy-700 border border-navy-700 text-xs text-slate-300 transition" title="کپی لینک دعوت">
+                    <i data-lucide="link" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    <span>دعوت</span>
+                </button>
+                <button onclick="toggleMobileSidebar()" class="lg:hidden relative p-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700">
+                    <i data-lucide="message-square" class="w-4 h-4"></i>
+                    <span id="mobileChatDot" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400"></span>
+                </button>
+                <button onclick="openExitModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/15 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 text-xs font-semibold transition">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">خروج</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- نوار مدیریت جلسه به سبک اتاق‌های آموزشی حرفه‌ای -->
+        <nav class="h-10 bg-navy-950 border-b border-navy-800 px-3 flex items-center gap-1 shrink-0 overflow-x-auto">
+            <button onclick="showSessionMenu('جلسه')" class="session-menu-btn">جلسه</button>
+            <button onclick="showSessionMenu('چیدمان')" class="session-menu-btn">چیدمان</button>
+            <button onclick="showSessionMenu('محتوا')" class="session-menu-btn">محتوا</button>
+            <button onclick="openPollModal()" class="session-menu-btn">نظرسنجی</button>
+            <button onclick="openQAModal()" class="session-menu-btn">پرسش و پاسخ</button>
+            <button onclick="toggleRecording()" id="recordBtn" class="session-menu-btn text-red-300" title="ضبط محلی یا ضبط پشتیبانی‌شده توسط سرور Jitsi">● ضبط</button>
+            <span id="sessionStatus" class="mr-auto text-[10px] text-slate-500 whitespace-nowrap">اتصال امن رسانه‌ای فعال</span>
+        </nav>
+
+        <!-- بدنه میانی: بخش مرکزی (Stage) + ستون کناری (Sidebar) -->
+        <div class="flex-1 flex overflow-hidden relative">
+
+            <!-- ب) بخش مرکزی (Stage) -->
+            <main class="flex-1 flex flex-col bg-navy-950 p-2 sm:p-3 overflow-hidden">
+
+                <!-- نوار سوئیچ تب‌های بخش مرکزی -->
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5 bg-navy-900 p-1.5 rounded-2xl border border-navy-800 shrink-0">
+                    <div class="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto">
+                        <button onclick="switchStageTab('live')" id="stageTab-live"
+                            class="stage-tab-btn flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-l from-cyan-500 to-blue-600 text-white shadow transition whitespace-nowrap">
+                            <i data-lucide="video" class="w-4 h-4"></i>
+                            <span>کلاس ویدیویی و صوتی زنده</span>
+                        </button>
+
+                        <button onclick="switchStageTab('whiteboard')" id="stageTab-whiteboard"
+                            class="stage-tab-btn flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-navy-800 transition whitespace-nowrap">
+                            <i data-lucide="pen-tool" class="w-4 h-4 text-cyan-400"></i>
+                            <span>تخته سفید هوشمند</span>
+                        </button>
+
+                        <button onclick="switchStageTab('slides')" id="stageTab-slides"
+                            class="stage-tab-btn flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-navy-800 transition whitespace-nowrap">
+                            <i data-lucide="presentation" class="w-4 h-4 text-cyan-400"></i>
+                            <span>نمایشگر اسلاید و جزوه</span>
+                        </button>
+                    </div>
+
+                    <div id="roleBadgeHeader" class="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-navy-800 border border-navy-700 text-xs text-cyan-300">
+                        <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                        <span>دسترسی استاد فعال است</span>
+                    </div>
+                </div>
+
+                <!-- کانتینر اصلی نمایش -->
+                <div class="flex-1 bg-navy-900 rounded-2xl border border-navy-800 overflow-hidden relative flex flex-col shadow-2xl">
+
+                    <!-- ۱) تب کلاس ویدیویی و صوتی زنده (Jitsi Meet API + تست محلی) -->
+                    <div id="stageView-live" class="stage-view flex-1 flex flex-col h-full relative">
+                        <!-- کانتینر اصلی Jitsi -->
+                        <div id="jitsiContainer" class="w-full h-full flex-1 bg-navy-950"></div>
+
+                        <!-- بنر راهنمای هوشمند و تست دوربین/میکروفون محلی (برای محیط‌های ایزوله یا قبل از اتصال) -->
+                        <div id="localTestOverlay" class="hidden absolute inset-0 bg-navy-950/95 z-20 flex flex-col items-center justify-center p-4 text-center overflow-y-auto">
+                            <div class="max-w-lg w-full bg-navy-900 border border-navy-700 rounded-2xl p-5 shadow-2xl">
+                                <div class="w-12 h-12 rounded-2xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center mx-auto mb-3 border border-cyan-500/30">
+                                    <i data-lucide="webcam" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="text-base font-bold text-white mb-1">تست محلی دوربین و میکروفون</h3>
+                                <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+                                    در صورتی که در محیط پیش‌نمایش ایزوله هستید و اتصال به سرور خارجی محدود شده است، می‌توانید کیفیت تصویر و صدای خود را اینجا تست کنید. پس از آپلود فایل روی هاست، ارتباط چندنفره Jitsi به صورت خودکار فعال می‌شود.
+                                </p>
+
+                                <div class="aspect-video bg-navy-950 rounded-xl border border-navy-800 overflow-hidden mb-4 relative flex items-center justify-center">
+                                    <video id="localTestVideo" autoplay muted playsinline class="w-full h-full object-cover hidden transform -scale-x-100"></video>
+                                    <span id="localTestPlaceholder" class="text-xs text-slate-500">پیش‌نمایش دوربین غیرفعال است</span>
+                                </div>
+
+                                <div class="flex flex-wrap items-center justify-center gap-2">
+                                    <button onclick="toggleLocalTestMedia()" id="btnStartLocalTest" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold flex items-center gap-1.5 transition">
+                                        <i data-lucide="camera" class="w-4 h-4"></i>
+                                        <span>روشن کردن دوربین تست</span>
+                                    </button>
+                                    <button onclick="closeLocalTestOverlay()" class="px-4 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 text-xs font-medium border border-navy-700 transition">
+                                        بازگشت به اتاق Jitsi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- نوار شناور کوچک پایین ویدیو برای دسترسی به تست محلی یا بازنشانی اتاق -->
+                        <div class="bg-navy-900/90 border-t border-navy-800 px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400 shrink-0">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                                <span>اتاق زنده متصل به سرور WebRTC (آماده برای ارتباط چندنفره روی هاست)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="openLocalTestOverlay()" class="text-cyan-400 hover:underline flex items-center gap-1">
+                                    <i data-lucide="sliders-horizontal" class="w-3 h-3"></i>
+                                    <span>تست دوربین/میکروفون محلی</span>
+                                </button>
+                                <span>|</span>
+                                <button onclick="reloadJitsiRoom()" class="text-slate-300 hover:text-white flex items-center gap-1">
+                                    <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                                    <span>اتصال مجدد</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ۲) تب تخته سفید هوشمند و تعاملی (Smart Whiteboard) -->
+                    <div id="stageView-whiteboard" class="stage-view hidden flex-1 flex-col h-full relative">
+                        <!-- نوار ابزار تخته سفید -->
+                        <div class="bg-navy-800 border-b border-navy-700 p-2 flex flex-wrap items-center justify-between gap-2 z-10 shrink-0">
+                            <!-- ابزارهای رسم -->
+                            <div class="flex flex-wrap items-center gap-1">
+                                <button onclick="setWbTool('pen')" id="wbTool-pen" class="wb-tool-btn p-2 rounded-lg bg-cyan-600 text-white transition" title="قلم آزاد">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="setWbTool('line')" id="wbTool-line" class="wb-tool-btn p-2 rounded-lg bg-navy-700 text-slate-300 hover:text-white transition" title="خط صاف / خط‌کش">
+                                    <i data-lucide="minus" class="w-4 h-4 transform -rotate-45"></i>
+                                </button>
+                                <button onclick="setWbTool('rect')" id="wbTool-rect" class="wb-tool-btn p-2 rounded-lg bg-navy-700 text-slate-300 hover:text-white transition" title="مستطیل">
+                                    <i data-lucide="square" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="setWbTool('circle')" id="wbTool-circle" class="wb-tool-btn p-2 rounded-lg bg-navy-700 text-slate-300 hover:text-white transition" title="دایره">
+                                    <i data-lucide="circle" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="setWbTool('text')" id="wbTool-text" class="wb-tool-btn p-2 rounded-lg bg-navy-700 text-slate-300 hover:text-white transition" title="تایپ متن روی تخته">
+                                    <i data-lucide="type" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="setWbTool('eraser')" id="wbTool-eraser" class="wb-tool-btn p-2 rounded-lg bg-navy-700 text-slate-300 hover:text-white transition" title="پاک‌کن">
+                                    <i data-lucide="eraser" class="w-4 h-4"></i>
+                                </button>
+
+                                <div class="h-6 w-px bg-navy-600 mx-1"></div>
+
+                                <!-- انتخاب رنگ -->
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="setWbColor('#ffffff')" data-color="#ffffff" class="wb-color-btn w-5 h-5 rounded-full bg-white ring-2 ring-cyan-400 ring-offset-2 ring-offset-navy-800"></button>
+                                    <button onclick="setWbColor('#22d3ee')" data-color="#22d3ee" class="wb-color-btn w-5 h-5 rounded-full bg-cyan-400"></button>
+                                    <button onclick="setWbColor('#ef4444')" data-color="#ef4444" class="wb-color-btn w-5 h-5 rounded-full bg-red-500"></button>
+                                    <button onclick="setWbColor('#10b981')" data-color="#10b981" class="wb-color-btn w-5 h-5 rounded-full bg-emerald-500"></button>
+                                    <button onclick="setWbColor('#f59e0b')" data-color="#f59e0b" class="wb-color-btn w-5 h-5 rounded-full bg-amber-500"></button>
+                                </div>
+
+                                <div class="h-6 w-px bg-navy-600 mx-1 hidden sm:block"></div>
+
+                                <!-- ضخامت قلم -->
+                                <div class="hidden sm:flex items-center gap-1.5 bg-navy-900 px-2 py-1 rounded-lg border border-navy-700">
+                                    <span class="text-[11px] text-slate-400">ضخامت:</span>
+                                    <input type="range" id="wbSizeInput" min="1" max="18" value="3" oninput="setWbSize(this.value)" class="w-16 accent-cyan-400 cursor-pointer">
+                                    <span id="wbSizeLabel" class="text-[11px] font-mono text-cyan-300 w-4">3</span>
+                                </div>
+                            </div>
+
+                            <!-- دکمه‌های Undo، ذخیره PNG و پاک کردن -->
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="undoWhiteboard()" class="p-2 rounded-lg bg-navy-700 hover:bg-navy-600 text-slate-200 text-xs flex items-center gap-1 transition" title="بازگشت به مرحله قبل (Undo)">
+                                    <i data-lucide="undo-2" class="w-4 h-4"></i>
+                                    <span class="hidden md:inline">بازگشت</span>
+                                </button>
+                                <button onclick="saveWhiteboardPNG()" class="p-2 rounded-lg bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/30 text-xs flex items-center gap-1 transition" title="ذخیره تصویر تخته (PNG)">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    <span class="hidden md:inline">ذخیره PNG</span>
+                                </button>
+                                <button onclick="clearWhiteboard()" class="p-2 rounded-lg bg-red-500/15 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 text-xs flex items-center gap-1 transition" title="پاک کردن کل تخته">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    <span class="hidden md:inline">پاک کردن</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- کانتینر بوم نقاشی -->
+                        <div id="wbContainer" class="flex-1 w-full h-full relative bg-[#0c1322] overflow-hidden">
+                            <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#38bdf8 1px, transparent 1px); background-size: 24px 24px;"></div>
+                            <canvas id="whiteboardCanvas" class="block w-full h-full cursor-crosshair touch-none"></canvas>
+
+                            <!-- کادر شناور تایپ متن روی تخته -->
+                            <div id="wbTextBox" class="hidden absolute z-20 bg-navy-900 border border-cyan-400 rounded-xl p-2 shadow-2xl">
+                                <input type="text" id="wbTextInput" placeholder="متن را بنویسید و Enter بزنید..."
+                                    class="bg-navy-800 text-white text-xs sm:text-sm px-2.5 py-1.5 rounded-lg border border-navy-600 focus:outline-none w-52">
+                                <div class="flex justify-end gap-1.5 mt-1.5">
+                                    <button type="button" onclick="cancelWbText()" class="px-2 py-1 rounded bg-navy-700 text-slate-300 text-[11px]">لغو</button>
+                                    <button type="button" onclick="confirmWbText()" class="px-2.5 py-1 rounded bg-cyan-600 text-white text-[11px] font-semibold">درج متن</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ۳) تب نمایشگر اسلاید و جزوه (Slides & Laser Pointer) -->
+                    <div id="stageView-slides" class="stage-view hidden flex-1 flex-col h-full relative">
+                        <!-- نوار ابزار اسلاید -->
+                        <div class="bg-navy-800 border-b border-navy-700 p-2 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                            <div class="flex items-center gap-2">
+                                <label class="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold transition shadow">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    <span>آپلود اسلاید / تصویر جزوه</span>
+                                    <input type="file" id="slideUploadInput" accept="image/*" multiple onchange="handleSlideUpload(event)" class="hidden">
+                                </label>
+
+                                <button onclick="toggleLaserPointer()" id="btnLaserToggle" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-navy-700 hover:bg-navy-600 text-slate-200 border border-navy-600 text-xs font-medium transition">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                    <span>نشانگر لیزری</span>
+                                </button>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="prevSlide()" class="p-1.5 rounded-lg bg-navy-700 hover:bg-navy-600 text-white" title="اسلاید قبلی">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                                <span id="slideCounterText" class="text-xs font-mono text-cyan-300 px-2">اسلاید 1 از 3</span>
+                                <button onclick="nextSlide()" class="p-1.5 rounded-lg bg-navy-700 hover:bg-navy-600 text-white" title="اسلاید بعدی">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- محل نمایش اسلاید با نشانگر لیزری -->
+                        <div id="slideDisplayArea" onmousemove="moveLaser(event)" onmouseleave="hideLaser()"
+                            class="flex-1 bg-navy-950 p-4 flex items-center justify-center relative overflow-hidden">
+                            
+                            <!-- نقطه لیزری -->
+                            <div id="laserPointerDot" class="laser-dot"></div>
+
+                            <!-- کارت محتوای اسلاید -->
+                            <div id="slideContentWrapper" class="w-full max-w-4xl h-full flex items-center justify-center">
+                                <!-- رندر پویا با جاوااسکریپت -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <!-- ج) ستون کناری (Sidebar) - چت و لیست کاربران حاضر -->
+            <aside id="classroomSidebar" class="fixed lg:static inset-y-0 left-0 w-80 sm:w-96 bg-navy-900 border-r border-navy-800 flex flex-col z-30 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-2xl lg:shadow-none">
+                
+                <!-- تب‌های ستون کناری -->
+                <div class="p-2.5 border-b border-navy-800 flex items-center gap-2 shrink-0">
+                    <button onclick="switchSidebarTab('chat')" id="sideTab-chat"
+                        class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-cyan-600 text-white text-xs sm:text-sm font-semibold transition">
+                        <i data-lucide="message-square" class="w-4 h-4"></i>
+                        <span>گفتگوی کلاس</span>
+                    </button>
+
+                    <button onclick="switchSidebarTab('users')" id="sideTab-users"
+                        class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-navy-800 text-slate-300 hover:text-white text-xs sm:text-sm font-medium transition">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        <span>حاضرین (<span id="participantsCount">4</span>)</span>
+                    </button>
+
+                    <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-xl bg-navy-800 text-slate-400 hover:text-white">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- ۱. تب گفتگو (چت کلاس) -->
+                <div id="sideView-chat" class="flex-1 flex flex-col overflow-hidden">
+                    <div id="chatMessagesBox" class="flex-1 p-3 overflow-y-auto space-y-3">
+                        <div class="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-2.5 text-center text-xs text-cyan-300">
+                            خوش آمدید! پیام‌های شما برای تمام حاضرین در کلاس نمایش داده می‌شود.
+                        </div>
+                    </div>
+
+                    <!-- نوار واکنش سریع -->
+                    <div class="px-3 py-1.5 bg-navy-950/60 border-t border-navy-800 flex items-center justify-between shrink-0">
+                        <span class="text-[11px] text-slate-400">واکنش سریع:</span>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="sendReaction('👍')" class="p-1 rounded hover:bg-navy-800 text-base transition transform hover:scale-125">👍</button>
+                            <button type="button" onclick="sendReaction('👏')" class="p-1 rounded hover:bg-navy-800 text-base transition transform hover:scale-125">👏</button>
+                            <button type="button" onclick="sendReaction('✋')" class="p-1 rounded hover:bg-navy-800 text-base transition transform hover:scale-125">✋</button>
+                            <button type="button" onclick="sendReaction('❤️')" class="p-1 rounded hover:bg-navy-800 text-base transition transform hover:scale-125">❤️</button>
+                        </div>
+                    </div>
+
+                    <!-- فرم ارسال پیام -->
+                    <form onsubmit="submitChatMessage(event)" class="p-2.5 bg-navy-950 border-t border-navy-800 flex items-center gap-2 shrink-0">
+                        <input type="text" id="chatInputField" placeholder="پیام خود را بنویسید..." autocomplete="off"
+                            class="flex-1 bg-navy-800 border border-navy-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none">
+                        <button type="submit" class="p-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white transition shrink-0" title="ارسال">
+                            <i data-lucide="send-horizontal" class="w-4 h-4 transform rotate-180"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ۲. تب کاربران حاضر -->
+                <div id="sideView-users" class="hidden flex-1 flex-col overflow-hidden">
+                    <!-- ابزارهای مدیریتی ویژه استاد -->
+                    <div id="teacherUserControls" class="p-2.5 bg-navy-950/70 border-b border-navy-800 flex items-center justify-between gap-2 shrink-0">
+                        <span class="text-[11px] text-cyan-400 font-semibold">مدیریت پنل استاد:</span>
+                        <button onclick="clearAllRaisedHands()" class="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[11px] font-medium transition">
+                            پاک کردن دست‌های بالا رفته
+                        </button>
+                    </div>
+
+                    <!-- دکمه بالا بردن دست مخصوص دانشجو -->
+                    <div id="studentHandControl" class="hidden p-2.5 bg-navy-950/70 border-b border-navy-800 shrink-0">
+                        <button onclick="toggleRaiseHand()" class="w-full py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center justify-center gap-2 transition">
+                            <span>✋</span>
+                            <span>بالا بردن دست (درخواست اجازه صحبت)</span>
+                        </button>
+                    </div>
+
+                    <div id="usersListBox" class="flex-1 p-3 overflow-y-auto space-y-2">
+                        <!-- رندر پویا -->
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+
+        <!-- د) نوار ابزار کنترل پایین (Bottom Control Bar) -->
+        <footer class="h-16 bg-navy-900 border-t border-navy-800 px-3 sm:px-6 flex items-center justify-between shrink-0 z-20">
+            <div class="hidden md:flex items-center gap-2 text-xs text-slate-400">
+                <span class="font-semibold text-cyan-400">استاد فاطمه بادامیان بنه کهل</span>
+            </div>
+
+            <!-- دکمه‌های کنترل مرکزی -->
+            <div class="flex items-center justify-center gap-1.5 sm:gap-2.5 mx-auto">
+                <button onclick="triggerJitsiAction('toggleAudio')" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700 text-xs font-medium transition" title="میکروفون">
+                    <i data-lucide="mic" class="w-4 h-4 text-cyan-400"></i>
+                    <span class="hidden sm:inline">میکروفون</span>
+                </button>
+
+                <button onclick="triggerJitsiAction('toggleVideo')" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700 text-xs font-medium transition" title="وب‌کم">
+                    <i data-lucide="video" class="w-4 h-4 text-cyan-400"></i>
+                    <span class="hidden sm:inline">وب‌کم</span>
+                </button>
+
+                <button onclick="triggerJitsiAction('toggleShareScreen')" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700 text-xs font-medium transition" title="اشتراک صفحه">
+                    <i data-lucide="monitor-up" class="w-4 h-4 text-cyan-400"></i>
+                    <span class="hidden sm:inline">اشتراک صفحه</span>
+                </button>
+
+                <button onclick="switchStageTab('whiteboard')" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700 text-xs font-medium transition" title="تخته سفید">
+                    <i data-lucide="pen-tool" class="w-4 h-4 text-emerald-400"></i>
+                    <span class="hidden md:inline">تخته سفید</span>
+                </button>
+
+                <button onclick="switchStageTab('slides')" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700 text-xs font-medium transition" title="نمایش اسلاید">
+                    <i data-lucide="presentation" class="w-4 h-4 text-purple-400"></i>
+                    <span class="hidden md:inline">اسلاید</span>
+                </button>
+
+                <button onclick="toggleRaiseHand()" id="footerHandBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700 text-xs font-medium transition" title="بالا بردن دست">
+                    <i data-lucide="hand" class="w-4 h-4 text-amber-400"></i>
+                    <span class="hidden sm:inline">بالا بردن دست</span>
+                </button>
+
+                <button onclick="openExitModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/20 transition" title="پایان / خروج">
+                    <i data-lucide="phone-off" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">پایان / خروج</span>
+                </button>
+            </div>
+
+            <div class="hidden md:flex items-center text-[11px] text-slate-500">
+                <span>نسخه اختصاصی</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- مودال نظرسنجی -->
+    <div id="pollModal" class="fixed inset-0 modal-backdrop z-[60] hidden items-center justify-center p-4">
+      <div class="bg-navy-900 border border-navy-700 rounded-2xl w-full max-w-md p-5 shadow-2xl">
+        <h3 class="font-bold text-white mb-3">نظرسنجی سریع کلاس</h3>
+        <input id="pollQuestion" class="w-full bg-navy-800 border border-navy-700 rounded-xl px-3 py-2 text-sm text-white mb-2" placeholder="سؤال نظرسنجی را بنویسید">
+        <div class="grid grid-cols-2 gap-2">
+          <input id="pollOpt1" class="bg-navy-800 border border-navy-700 rounded-xl px-3 py-2 text-xs text-white" value="بله">
+          <input id="pollOpt2" class="bg-navy-800 border border-navy-700 rounded-xl px-3 py-2 text-xs text-white" value="خیر">
+        </div>
+        <div class="flex gap-2 mt-4"><button onclick="sendPoll()" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white text-xs font-bold">ارسال برای کلاس</button><button onclick="closePollModal()" class="px-4 py-2 rounded-xl bg-navy-800 text-slate-300 text-xs">انصراف</button></div>
+      </div>
+    </div>
+
+    <!-- مودال پرسش و پاسخ -->
+    <div id="qaModal" class="fixed inset-0 modal-backdrop z-[60] hidden items-center justify-center p-4">
+      <div class="bg-navy-900 border border-navy-700 rounded-2xl w-full max-w-md p-5 shadow-2xl">
+        <h3 class="font-bold text-white mb-3">پرسش و پاسخ</h3>
+        <textarea id="qaInput" rows="4" class="w-full bg-navy-800 border border-navy-700 rounded-xl px-3 py-2 text-sm text-white" placeholder="سؤال خود را برای استاد بنویسید..."></textarea>
+        <div class="flex gap-2 mt-4"><button onclick="sendQuestion()" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white text-xs font-bold">ارسال سؤال</button><button onclick="closeQAModal()" class="px-4 py-2 rounded-xl bg-navy-800 text-slate-300 text-xs">انصراف</button></div>
+      </div>
+    </div>
+
+    <!-- مودال تایید خروج ایمن -->
+    <div id="exitConfirmModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-navy-900 border border-navy-700 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-red-500/15 text-red-500 flex items-center justify-center mx-auto mb-3 border border-red-500/30">
+                <i data-lucide="log-out" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">خروج از کلاس آنلاین</h3>
+            <p class="text-xs text-slate-400 mb-5">آیا مطمئن هستید که می‌خواهید از کلاس خارج شوید؟</p>
+            <div class="flex items-center gap-3">
+                <button onclick="closeExitModal()" class="flex-1 py-2.5 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-300 text-xs font-semibold transition">انصراف</button>
+                <button onclick="confirmLeaveClass()" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition">بله، خروج</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- ۳. منطق جاوااسکریپت کامل برنامه                                         -->
+    <!-- ===================================================================== -->
+    <script>
+        // راه‌اندازی اولیه آیکون‌ها
+        lucide.createIcons();
+
+        // ================= وضعیت سراسری (App State) =================
+        const appState = {
+            role: 'teacher', // 'teacher' | 'student'
+            userName: 'استاد فاطمه بادامیان بنه کهل',
+            roomTitle: 'کلاس تخصصی استاد فاطمه بادامیان',
+            jitsiApi: null,
+            timerInterval: null,
+            secondsElapsed: 0,
+            handRaised: false,
+            localTestStream: null,
+            participants: [],
+            participantMap: {},
+            recording: false,
+            polls: [],
+            questions: [],
+            slides: [
+                {
+                    type: 'default',
+                    badge: 'خوش‌آمدگویی',
+                    title: 'به کلاس آنلاین استاد فاطمه بادامیان بنه کهل خوش آمدید',
+                    subtitle: 'برای نمایش اسلایدها یا صفحات جزوه خود، از دکمه «آپلود اسلاید / تصویر جزوه» در بالای همین کادر استفاده کنید.'
+                },
+                {
+                    type: 'default',
+                    badge: 'راهنمای کلاس',
+                    title: 'امکانات تعاملی کلاس مجازی',
+                    subtitle: '• استفاده از نشانگر لیزری قرمز روی اسلایدها\n• رسم اشکال هندسی و نوشتن روی تخته سفید هوشمند\n• پرسش و پاسخ زنده از طریق چت و بالا بردن دست'
+                },
+                {
+                    type: 'default',
+                    badge: 'نکته آموزشی',
+                    title: 'آماده شروع تدریس',
+                    subtitle: 'تمامی ابزارهای صوتی، تصویری و اشتراک صفحه نمایش از نوار پایین صفحه در دسترس هستند.'
+                }
+            ],
+            currentSlideIndex: 0,
+            laserActive: false
+        };
+
+        // ================= سیستم اعلان‌های زیبا (Toast) =================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const styles = {
+                info: 'bg-navy-800 border-cyan-500/40 text-slate-100',
+                success: 'bg-navy-800 border-emerald-500/40 text-emerald-300',
+                warning: 'bg-navy-800 border-amber-500/40 text-amber-300',
+                error: 'bg-navy-800 border-red-500/40 text-red-300'
+            };
+            toast.className = `px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-md text-xs sm:text-sm font-medium text-center transition-all duration-300 ${styles[type] || styles.info}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // ================= منطق صفحه ورود (Lobby) =================
+        function selectRole(role) {
+            appState.role = role;
+            const btnTeacher = document.getElementById('roleBtnTeacher');
+            const btnStudent = document.getElementById('roleBtnStudent');
+            const teacherFields = document.getElementById('teacherFields');
+            const studentFields = document.getElementById('studentFields');
+
+            if (role === 'teacher') {
+                btnTeacher.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-cyan-500 bg-cyan-500/15 text-right transition';
+                btnStudent.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-navy-700 bg-navy-900 hover:border-navy-600 text-right transition';
+                teacherFields.classList.remove('hidden');
+                studentFields.classList.add('hidden');
+            } else {
+                btnStudent.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-cyan-500 bg-cyan-500/15 text-right transition';
+                btnTeacher.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-navy-700 bg-navy-900 hover:border-navy-600 text-right transition';
+                studentFields.classList.remove('hidden');
+                teacherFields.classList.add('hidden');
+            }
+        }
+
+        function applyPresetClass() {
+            const selected = document.getElementById('presetClassSelect').value;
+            document.getElementById('roomNameInput').value = selected;
+        }
+
+        function copyInviteLink() {
+            const roomVal = document.getElementById('roomNameInput')?.value.trim() || appState.roomTitle;
+            const url = new URL(window.location.href);
+            url.searchParams.set('room', roomVal);
+            const inviteText = `دعوت به کلاس آنلاین استاد فاطمه بادامیان بنه کهل\nعنوان کلاس: ${roomVal}\nلینک ورود: ${url.toString()}`;
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = inviteText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast('لینک دعوت کلاس در حافظه کپی شد. می‌توانید برای دانشجویان ارسال کنید.', 'success');
+            } catch (e) {
+                showToast('کپی لینک انجام نشد.', 'error');
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        // بررسی پارامتر لینک در صورت ورود دانشجو با لینک دعوت
+        window.addEventListener('DOMContentLoaded', () => {
+            checkMediaPermissionStatus(false);
+            const params = new URLSearchParams(window.location.search);
+            const roomParam = params.get('room');
+            if (roomParam) {
+                document.getElementById('roomNameInput').value = roomParam;
+                selectRole('student');
+            }
+        });
+
+        window.addEventListener('beforeunload', () => {
+            try {
+                if (appState.localTestStream) appState.localTestStream.getTracks().forEach(t => t.stop());
+                if (appState.jitsiApi) appState.jitsiApi.dispose();
+            } catch (_) {}
+        });
+
+        function enterClassroom(e) {
+            e.preventDefault();
+            const roomInput = document.getElementById('roomNameInput').value.trim();
+            if (!roomInput) {
+                showToast('لطفاً نام یا شناسه کلاس را وارد کنید.', 'warning');
+                return;
+            }
+
+            if (appState.role === 'teacher') {
+                appState.userName = 'استاد فاطمه بادامیان بنه کهل';
+            } else {
+                const stName = document.getElementById('studentNameInput').value.trim();
+                if (!stName) {
+                    showToast('لطفاً نام و نام خانوادگی خود را وارد کنید.', 'warning');
+                    return;
+                }
+                appState.userName = stName;
+            }
+
+            appState.roomTitle = roomInput;
+            document.getElementById('headerRoomTitle').textContent = appState.roomTitle;
+
+            // تنظیم دسترسی‌های استاد و دانشجو در رابط کاربری
+            const roleBadge = document.getElementById('roleBadgeHeader');
+            const teacherControls = document.getElementById('teacherUserControls');
+            const studentHandCtrl = document.getElementById('studentHandControl');
+
+            // در زمان ورود هیچ شرکت‌کننده ساختگی اضافه نمی‌کنیم؛ لیست حاضرین بعد از
+            // اتصال واقعی Jitsi از رویدادهای خود سرویس پر می‌شود. این بخش قبلاً
+            // باعث خطای appState.participants[0] و توقف کامل ورود می‌شد.
+            roleBadge.classList.toggle('hidden', appState.role !== 'teacher');
+            teacherControls.classList.toggle('hidden', appState.role !== 'teacher');
+            studentHandCtrl.classList.toggle('hidden', appState.role === 'teacher');
+            const recordBtn = document.getElementById('recordBtn');
+            if (recordBtn) recordBtn.classList.toggle('hidden', appState.role !== 'teacher');
+            appState.participantMap = {};
+            appState.participants = [];
+
+            // تغییر نمایش از لابی به محیط کلاس
+            document.getElementById('lobbyScreen').classList.add('hidden');
+            const appEl = document.getElementById('classroomApp');
+            appEl.classList.remove('hidden');
+            appEl.classList.add('flex');
+
+            // شروع تایمر کلاس
+            startClassTimer();
+
+            // ابتدا از مرورگر مجوز دوربین و میکروفون را درخواست می‌کنیم.
+            // حتی اگر یکی از مجوزها رد شود، ورود به کلاس متوقف نمی‌شود.
+            requestMediaPermissions().finally(() => {
+                // راه‌اندازی Jitsi Meet API
+                initJitsiRoom();
+            });
+
+            // پیام خوش‌آمدگویی در چت
+            appendMessage('سیستم', `${appState.userName} وارد کلاس شد.`, 'system');
+            renderParticipants();
+            renderCurrentSlide();
+            showToast(`خوش آمدید ${appState.userName}`, 'success');
+        }
+
+        function startClassTimer() {
+            appState.secondsElapsed = 0;
+            clearInterval(appState.timerInterval);
+            appState.timerInterval = setInterval(() => {
+                appState.secondsElapsed++;
+                const h = String(Math.floor(appState.secondsElapsed / 3600)).padStart(2, '0');
+                const m = String(Math.floor((appState.secondsElapsed % 3600) / 60)).padStart(2, '0');
+                const s = String(appState.secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('classTimer').textContent = `${h}:${m}:${s}`;
+            }, 1000);
+        }
+
+        // ================= اتصال واقعی به Jitsi Meet API =================
+        function applyJitsiIframePermissions() {
+            const container = document.getElementById('jitsiContainer');
+            if (!container) return;
+            const apply = () => {
+                container.querySelectorAll('iframe').forEach(frame => {
+                    // برای WebRTC داخل iframe، اجازه‌های صریح مرورگر را مشخص می‌کنیم.
+                    frame.setAttribute('allow', 'camera; microphone; fullscreen; display-capture; autoplay; clipboard-write');
+                    frame.setAttribute('allowfullscreen', 'true');
+                    frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+                });
+            };
+            apply();
+            if (container._permissionObserver) container._permissionObserver.disconnect();
+            const observer = new MutationObserver(apply);
+            observer.observe(container, {childList:true, subtree:true});
+            container._permissionObserver = observer;
+        }
+
+        function initJitsiRoom() {
+            const container = document.getElementById('jitsiContainer');
+            container.innerHTML = '';
+
+            // نام اتاق فقط با حروف/عدد انگلیسی ساخته می‌شود تا در همه مرورگرها پایدار باشد.
+            const roomKey = makeRoomKey(appState.roomTitle);
+            const safeRoomSlug = 'BadamianAcademy_' + roomKey;
+
+            if (typeof JitsiMeetExternalAPI === 'undefined') {
+                container.innerHTML = `<div class="h-full flex items-center justify-center p-6 text-center"><div><p class="text-sm text-amber-300 font-semibold mb-2">Jitsi در این مرورگر در دسترس نیست.</p><p class="text-xs text-slate-400">این صفحه باید روی هاست دارای اینترنت و با HTTPS اجرا شود.</p></div></div>`;
+                return;
+            }
+
+            try {
+                const options = {
+                    roomName: safeRoomSlug,
+                    width: '100%', height: '100%', parentNode: container, lang: 'fa',
+                    userInfo: { displayName: appState.userName },
+                    configOverwrite: {
+                        // پیش‌ورود فعال است تا مرورگر/جیتسی قبل از ورود، وضعیت دوربین و میکروفون را نشان دهد.
+                        prejoinPageEnabled: true,
+                        startWithAudioMuted: false,
+                        startWithVideoMuted: false,
+                        disableInitialGUM: false,
+                        disableDeepLinking: true,
+                        disableAP: true,
+                        localRecording: {
+                            disable: false,
+                            notifyAllParticipants: true
+                        },
+                        recordings: {
+                            recordAudioAndVideo: true,
+                            showPrejoinWarning: true,
+                            showRecordingLink: true
+                        }
+                    },
+                    interfaceConfigOverwrite: {
+                        SHOW_JITSI_WATERMARK: false,
+                        SHOW_WATERMARK_FOR_GUESTS: false,
+                        DEFAULT_REMOTE_DISPLAY_NAME: 'فراگیر',
+                        TOOLBAR_BUTTONS: ['microphone','camera','desktop','chat','raisehand','participants-pane','tileview','fullscreen']
+                    }
+                };
+
+                appState.jitsiApi = new JitsiMeetExternalAPI('meet.jit.si', options);
+                applyJitsiIframePermissions();
+                bindJitsiEvents();
+            } catch (err) {
+                document.getElementById('sessionStatus').textContent = 'خطا در اتصال به اتاق ویدیویی';
+                openLocalTestOverlay();
+            }
+        }
+
+        function makeRoomKey(value) {
+            let h = 2166136261;
+            for (let i = 0; i < value.length; i++) { h ^= value.charCodeAt(i); h = Math.imul(h, 16777619); }
+            return ('00000000' + (h >>> 0).toString(16)).slice(-8);
+        }
+
+        function bindJitsiEvents() {
+            const api = appState.jitsiApi;
+            if (!api) return;
+            const sync = () => { try { updateLiveParticipants(api.getParticipantsInfo ? api.getParticipantsInfo() : []); } catch (_) {} };
+            api.addListener('videoConferenceJoined', data => {
+                document.getElementById('sessionStatus').textContent = 'اتصال زنده برقرار شد';
+                appState.jitsiLocalId = data.id;
+                upsertLiveParticipant(data.id, data.displayName || appState.userName, true);
+                sync();
+                refreshMediaButtons();
+            });
+            api.addListener('videoConferenceLeft', () => {
+                document.getElementById('sessionStatus').textContent = 'از اتاق خارج شدید';
+            });
+            api.addListener('audioMuteStatusChanged', refreshMediaButtons);
+            api.addListener('videoMuteStatusChanged', refreshMediaButtons);
+            api.addListener('audioAvailabilityChanged', refreshMediaButtons);
+            api.addListener('videoAvailabilityChanged', refreshMediaButtons);
+            api.addListener('screenSharingStatusChanged', data => {
+                const btn = document.querySelector('[onclick="triggerJitsiAction(\'toggleShareScreen\')"]');
+                if (btn) btn.classList.toggle('bg-cyan-600', !!data.on);
+            });
+            api.addListener('recordingStatusChanged', data => {
+                appState.recording = !!data.on;
+                const btn = document.getElementById('recordBtn');
+                if (!btn) return;
+                if (data.on) {
+                    btn.textContent = '■ توقف ضبط';
+                    document.getElementById('sessionStatus').textContent = 'ضبط جلسه فعال است';
+                } else {
+                    btn.textContent = '● ضبط';
+                    document.getElementById('sessionStatus').textContent = data.error ? 'خطا در ضبط جلسه' : 'ضبط جلسه متوقف شد';
+                }
+                if (data.error) showToast('ضبط جلسه با خطا مواجه شد: ' + data.error, 'error');
+            });
+            api.addListener('recordingLinkAvailable', data => {
+                if (data && data.link) {
+                    const a = document.createElement('a');
+                    a.href = data.link;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                    a.textContent = 'مشاهده/دریافت ضبط جلسه';
+                    a.className = 'block mt-2 text-cyan-400 underline text-xs';
+                    document.getElementById('toastContainer').appendChild(a);
+                    showToast('لینک ضبط جلسه آماده شد.', 'success');
+                }
+            });
+            api.addListener('micError', data => showToast('دسترسی میکروفون برقرار نشد: ' + (data?.message || 'بررسی مجوز میکروفون'), 'error'));
+            api.addListener('cameraError', data => showToast('دسترسی دوربین برقرار نشد: ' + (data?.message || 'بررسی مجوز دوربین'), 'error'));
+            api.addListener('errorOccurred', data => {
+                if (data?.isFatal) showToast('خطای ارتباطی Jitsi: ' + (data.message || data.name || 'خطای نامشخص'), 'error');
+            });
+            api.addListener('participantJoined', data => {
+                upsertLiveParticipant(data.id, data.displayName || 'فراگیر', false);
+                renderParticipants();
+            });
+            api.addListener('participantLeft', data => {
+                delete appState.participantMap[data.id];
+                rebuildParticipants();
+            });
+            api.addListener('incomingMessage', data => {
+                if (!data.privateMessage) appendMessage(data.nick || 'فراگیر', data.message || '', 'student', true);
+            });
+            api.addListener('endpointTextMessageReceived', data => {
+                try {
+                    const msg = JSON.parse(data.eventData?.text || '');
+                    handleRealtimeMessage(msg, data.senderInfo?.id);
+                } catch (_) {}
+            });
+            api.addListener('displayNameChanged', data => {
+                if (appState.participantMap[data.id]) { appState.participantMap[data.id].name = data.displayName; rebuildParticipants(); }
+            });
+            api.addListener('readyToClose', () => { document.getElementById('sessionStatus').textContent = 'اتصال پایان یافت'; });
+        }
+
+        function upsertLiveParticipant(id, name, isSelf=false) {
+            if (!id) return;
+            appState.participantMap[id] = { id, name, role: isSelf ? appState.role : 'student', canSpeak: true, hand: false, isSelf };
+        }
+        function rebuildParticipants() {
+            appState.participants = Object.values(appState.participantMap);
+            renderParticipants();
+        }
+        function updateLiveParticipants(list) {
+            appState.participantMap = {};
+            (list || []).forEach(p => upsertLiveParticipant(p.participantId || p.id, p.displayName || 'فراگیر', false));
+            if (appState.jitsiLocalId) upsertLiveParticipant(appState.jitsiLocalId, appState.userName, true);
+            rebuildParticipants();
+        }
+        function sendRealtime(payload) {
+            if (!appState.jitsiApi) return false;
+            try { appState.jitsiApi.executeCommand('sendEndpointTextMessage', '', JSON.stringify(payload)); return true; } catch (_) { return false; }
+        }
+        function handleRealtimeMessage(msg, senderId) {
+            if (!msg || !msg.type) return;
+            if (msg.type === 'poll') renderIncomingPoll(msg);
+            if (msg.type === 'question') appendMessage(msg.sender || 'دانشجو', '❓ ' + msg.text, 'student', true);
+            if (msg.type === 'slideIndex' && appState.role !== 'teacher') { appState.currentSlideIndex = Math.max(0, Math.min(appState.slides.length - 1, Number(msg.index)||0)); renderCurrentSlide(); }
+        }
+
+        function reloadJitsiRoom() {
+            if (appState.jitsiApi) {
+                appState.jitsiApi.dispose();
+                appState.jitsiApi = null;
+            }
+            initJitsiRoom();
+            showToast('در حال اتصال مجدد به اتاق ویدیویی...', 'info');
+        }
+
+        async function triggerJitsiAction(command) {
+            switchStageTab('live');
+            if (appState.jitsiApi) {
+                try {
+                    appState.jitsiApi.executeCommand(command);
+                    setTimeout(refreshMediaButtons, 250);
+                } catch (e) {
+                    showToast('دستور رسانه‌ای اجرا نشد. اتصال اتاق را بررسی کنید.', 'warning');
+                }
+            } else {
+                openLocalTestOverlay();
+            }
+        }
+
+        async function refreshMediaButtons() {
+            const api = appState.jitsiApi;
+            if (!api) return;
+            try {
+                const muted = await api.isAudioMuted();
+                const btn = document.querySelector('[onclick="triggerJitsiAction(\'toggleAudio\')"]');
+                if (btn) {
+                    btn.classList.toggle('bg-red-600/20', !!muted);
+                    btn.classList.toggle('border-red-500/40', !!muted);
+                    btn.title = muted ? 'میکروفون خاموش است؛ برای روشن کردن کلیک کنید' : 'میکروفون روشن است؛ برای خاموش کردن کلیک کنید';
+                }
+            } catch (_) {}
+            try {
+                const muted = await api.isVideoMuted();
+                const btn = document.querySelector('[onclick="triggerJitsiAction(\'toggleVideo\')"]');
+                if (btn) {
+                    btn.classList.toggle('bg-red-600/20', !!muted);
+                    btn.classList.toggle('border-red-500/40', !!muted);
+                    btn.title = muted ? 'وب‌کم خاموش است؛ برای روشن کردن کلیک کنید' : 'وب‌کم روشن است؛ برای خاموش کردن کلیک کنید';
+                }
+            } catch (_) {}
+        }
+
+        // ================= درخواست مجوز دوربین و میکروفون =================
+        function isSecureMediaContext() {
+            return window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        }
+
+        async function queryPermissionState(name) {
+            try {
+                if (!navigator.permissions || !navigator.permissions.query) return 'unknown';
+                const result = await navigator.permissions.query({name});
+                return result.state;
+            } catch (_) {
+                return 'unknown';
+            }
+        }
+
+        async function checkMediaPermissionStatus(requestNow = false) {
+            const title = document.getElementById('mediaPermissionTitle');
+            const text = document.getElementById('mediaPermissionText');
+            const panel = document.getElementById('mediaPermissionPanel');
+            if (!title || !text || !panel) return;
+
+            if (!isSecureMediaContext()) {
+                title.textContent = 'این صفحه امن نیست (HTTPS لازم است)';
+                text.textContent = 'دوربین و میکروفون در صفحه HTTP معمولاً قابل استفاده نیستند. سایت را با آدرس HTTPS باز کنید؛ GitHub Pages به‌صورت پیش‌فرض HTTPS دارد.';
+                panel.className = 'mb-4 rounded-2xl border border-red-500/30 bg-red-500/5 p-3';
+                return false;
+            }
+
+            let camera = await queryPermissionState('camera');
+            let microphone = await queryPermissionState('microphone');
+
+            if (requestNow && (camera !== 'granted' || microphone !== 'granted')) {
+                const results = [];
+                if (camera !== 'granted') {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({video:true});
+                        stream.getTracks().forEach(t => t.stop());
+                        results.push('camera');
+                    } catch (err) {
+                        results.push('camera:' + (err?.name || 'error'));
+                    }
+                }
+                if (microphone !== 'granted') {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+                        stream.getTracks().forEach(t => t.stop());
+                        results.push('microphone');
+                    } catch (err) {
+                        results.push('microphone:' + (err?.name || 'error'));
+                    }
+                }
+                camera = await queryPermissionState('camera');
+                microphone = await queryPermissionState('microphone');
+            }
+
+            const granted = camera === 'granted' && microphone === 'granted';
+            const denied = camera === 'denied' || microphone === 'denied';
+
+            if (granted) {
+                title.textContent = 'دوربین و میکروفون مجاز هستند ✓';
+                text.textContent = 'دسترسی رسانه‌ای آماده است. هنگام ورود به Jitsi، پیش‌نمایش دوربین و میکروفون نیز نمایش داده می‌شود.';
+                panel.className = 'mb-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-3';
+            } else if (denied) {
+                title.textContent = 'مجوز دوربین یا میکروفون مسدود شده است';
+                text.textContent = 'از تنظیمات سایت در مرورگر، Camera و Microphone را روی Allow بگذارید و سپس دوباره «بررسی / درخواست دسترسی» را بزنید.';
+                panel.className = 'mb-4 rounded-2xl border border-red-500/30 bg-red-500/5 p-3';
+            } else {
+                title.textContent = 'مجوز رسانه هنوز تأیید نشده است';
+                text.textContent = 'روی «بررسی / درخواست دسترسی» بزنید. اگر مرورگر سؤال کرد، برای دوربین و میکروفون گزینه Allow / اجازه را انتخاب کنید.';
+                panel.className = 'mb-4 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-3';
+            }
+            lucide.createIcons();
+            return granted;
+        }
+
+        function showBrowserPermissionHelp() {
+            showToast('اگر پنجره اجازه نمایش داده نشد، روی علامت قفل کنار آدرس سایت بزنید و Camera و Microphone را روی Allow قرار دهید؛ سپس صفحه را تازه‌سازی کنید.', 'info');
+        }
+
+        async function requestMediaPermissions() {
+            if (!isSecureMediaContext()) {
+                showToast('برای دوربین و میکروفون، سایت باید با HTTPS اجرا شود. GitHub Pages این شرط را دارد.', 'error');
+                await checkMediaPermissionStatus(false);
+                return false;
+            }
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showToast('مرورگر این دستگاه امکان دسترسی به دوربین و میکروفون را ارائه نمی‌کند.', 'error');
+                return false;
+            }
+
+            let cameraOk = false;
+            let microphoneOk = false;
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({video:true});
+                stream.getTracks().forEach(t => t.stop());
+                cameraOk = true;
+            } catch (err) {
+                const reason = err?.name === 'NotAllowedError'
+                    ? 'مجوز دوربین رد یا مسدود شده است.'
+                    : err?.name === 'NotFoundError'
+                        ? 'دوربین پیدا نشد.'
+                        : err?.name === 'NotReadableError'
+                            ? 'دوربین توسط برنامه دیگری در حال استفاده است.'
+                            : 'دسترسی دوربین برقرار نشد.';
+                showToast(reason, 'warning');
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+                stream.getTracks().forEach(t => t.stop());
+                microphoneOk = true;
+            } catch (err) {
+                const reason = err?.name === 'NotAllowedError'
+                    ? 'مجوز میکروفون رد یا مسدود شده است.'
+                    : err?.name === 'NotFoundError'
+                        ? 'میکروفون پیدا نشد.'
+                        : err?.name === 'NotReadableError'
+                            ? 'میکروفون توسط برنامه دیگری در حال استفاده است.'
+                            : 'دسترسی میکروفون برقرار نشد.';
+                showToast(reason, 'warning');
+            }
+
+            await checkMediaPermissionStatus(false);
+            if (cameraOk && microphoneOk) {
+                showToast('مجوز دوربین و میکروفون دریافت شد. در حال ورود به کلاس...', 'success');
+            } else {
+                showToast('ورود به کلاس متوقف نشد؛ Jitsi نیز امکان درخواست دوباره مجوز را خواهد داشت.', 'info');
+            }
+            return cameraOk && microphoneOk;
+        }
+
+        // ================= تست محلی دوربین و میکروفون =================
+        function openLocalTestOverlay() {
+            switchStageTab('live');
+            document.getElementById('localTestOverlay').classList.remove('hidden');
+        }
+
+        function closeLocalTestOverlay() {
+            if (appState.localTestStream) {
+                appState.localTestStream.getTracks().forEach(t => t.stop());
+                appState.localTestStream = null;
+            }
+            const video = document.getElementById('localTestVideo');
+            video.srcObject = null;
+            video.classList.add('hidden');
+            document.getElementById('localTestPlaceholder').classList.remove('hidden');
+            document.getElementById('localTestOverlay').classList.add('hidden');
+        }
+
+        async function toggleLocalTestMedia() {
+            const video = document.getElementById('localTestVideo');
+            const placeholder = document.getElementById('localTestPlaceholder');
+            const btn = document.getElementById('btnStartLocalTest');
+
+            if (!appState.localTestStream) {
+                try {
+                    appState.localTestStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    video.srcObject = appState.localTestStream;
+                    video.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    btn.innerHTML = '<span>توقف دوربین تست</span>';
+                    showToast('دوربین و میکروفون شما سالم و فعال است.', 'success');
+                } catch (err) {
+                    const reason = err?.name === 'NotAllowedError' ? 'مجوز دوربین/میکروفون رد شده است.'
+                        : err?.name === 'NotFoundError' ? 'دوربین یا میکروفون روی دستگاه پیدا نشد.'
+                        : err?.name === 'NotReadableError' ? 'دوربین یا میکروفون توسط برنامه دیگری در حال استفاده است.'
+                        : 'دسترسی رسانه‌ای برقرار نشد.';
+                    showToast(reason + ' مجوزهای مرورگر را بررسی کنید.', 'error');
+                }
+            } else {
+                appState.localTestStream.getTracks().forEach(t => t.stop());
+                appState.localTestStream = null;
+                video.srcObject = null;
+                video.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                btn.innerHTML = '<span>روشن کردن دوربین تست</span>';
+            }
+        }
+
+        // ================= جابه‌جایی تب‌های بخش مرکزی (Stage) =================
+        function switchStageTab(tab) {
+            document.querySelectorAll('.stage-view').forEach(v => {
+                v.classList.add('hidden');
+                v.classList.remove('flex');
+            });
+            const target = document.getElementById(`stageView-${tab}`);
+            target.classList.remove('hidden');
+            target.classList.add('flex');
+
+            document.querySelectorAll('.stage-tab-btn').forEach(b => {
+                b.className = 'stage-tab-btn flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-navy-800 transition whitespace-nowrap';
+            });
+            const activeBtn = document.getElementById(`stageTab-${tab}`);
+            activeBtn.className = 'stage-tab-btn flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-l from-cyan-500 to-blue-600 text-white shadow transition whitespace-nowrap';
+
+            if (tab === 'whiteboard') {
+                requestAnimationFrame(() => resizeWhiteboard());
+            }
+        }
+
+        // ================= تخته سفید هوشمند (Whiteboard با Undo، اشکال و متن) =================
+        const wbCanvas = document.getElementById('whiteboardCanvas');
+        const wbCtx = wbCanvas.getContext('2d');
+        const wbContainer = document.getElementById('wbContainer');
+
+        const wbState = {
+            drawing: false,
+            tool: 'pen', // pen | line | rect | circle | text | eraser
+            color: '#ffffff',
+            size: 3,
+            startX: 0,
+            startY: 0,
+            snapshot: null,
+            history: [],
+            pendingTextX: 0,
+            pendingTextY: 0
+        };
+
+        function resizeWhiteboard() {
+            const width = wbContainer.clientWidth;
+            const height = wbContainer.clientHeight;
+            if (width === 0 || height === 0) return;
+
+            const savedData = wbCanvas.width > 0 && wbCanvas.height > 0
+                ? wbCtx.getImageData(0, 0, wbCanvas.width, wbCanvas.height)
+                : null;
+
+            wbCanvas.width = width;
+            wbCanvas.height = height;
+
+            if (savedData) {
+                wbCtx.putImageData(savedData, 0, 0);
+            }
+            wbCtx.lineCap = 'round';
+            wbCtx.lineJoin = 'round';
+        }
+
+        window.addEventListener('resize', () => {
+            if (!document.getElementById('stageView-whiteboard').classList.contains('hidden')) {
+                resizeWhiteboard();
+            }
+        });
+
+        function saveWbHistory() {
+            if (wbCanvas.width === 0 || wbCanvas.height === 0) return;
+            if (wbState.history.length >= 25) wbState.history.shift();
+            wbState.history.push(wbCtx.getImageData(0, 0, wbCanvas.width, wbCanvas.height));
+        }
+
+        function undoWhiteboard() {
+            if (wbState.history.length === 0) {
+                showToast('مرحله قبلی برای بازگشت وجود ندارد.', 'warning');
+                return;
+            }
+            const previousState = wbState.history.pop();
+            wbCtx.putImageData(previousState, 0, 0);
+        }
+
+        function getWbCoords(e) {
+            const rect = wbCanvas.getBoundingClientRect();
+            const scaleX = wbCanvas.width / rect.width;
+            const scaleY = wbCanvas.height / rect.height;
+
+            if (e.touches && e.touches.length > 0) {
+                return {
+                    x: (e.touches[0].clientX - rect.left) * scaleX,
+                    y: (e.touches[0].clientY - rect.top) * scaleY
+                };
+            }
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        }
+
+        function onWbPointerDown(e) {
+            const coords = getWbCoords(e);
+
+            if (wbState.tool === 'text') {
+                wbState.pendingTextX = coords.x;
+                wbState.pendingTextY = coords.y;
+                const textBox = document.getElementById('wbTextBox');
+                textBox.style.left = Math.min(coords.x, wbCanvas.width - 230) + 'px';
+                textBox.style.top = Math.min(coords.y, wbCanvas.height - 90) + 'px';
+                textBox.classList.remove('hidden');
+                const input = document.getElementById('wbTextInput');
+                input.value = '';
+                setTimeout(() => input.focus(), 50);
+                return;
+            }
+
+            saveWbHistory();
+            wbState.drawing = true;
+            wbState.startX = coords.x;
+            wbState.startY = coords.y;
+            wbState.snapshot = wbCtx.getImageData(0, 0, wbCanvas.width, wbCanvas.height);
+
+            if (wbState.tool === 'pen' || wbState.tool === 'eraser') {
+                wbCtx.beginPath();
+                wbCtx.moveTo(coords.x, coords.y);
+            }
+        }
+
+        function onWbPointerMove(e) {
+            if (!wbState.drawing) return;
+            if (e.cancelable) e.preventDefault();
+            const coords = getWbCoords(e);
+
+            if (wbState.tool === 'pen') {
+                wbCtx.globalCompositeOperation = 'source-over';
+                wbCtx.strokeStyle = wbState.color;
+                wbCtx.lineWidth = wbState.size;
+                wbCtx.lineTo(coords.x, coords.y);
+                wbCtx.stroke();
+            } else if (wbState.tool === 'eraser') {
+                wbCtx.globalCompositeOperation = 'destination-out';
+                wbCtx.lineWidth = wbState.size * 5;
+                wbCtx.lineTo(coords.x, coords.y);
+                wbCtx.stroke();
+            } else {
+                // پیش‌نمایش اشکال هندسی
+                wbCtx.putImageData(wbState.snapshot, 0, 0);
+                wbCtx.globalCompositeOperation = 'source-over';
+                wbCtx.strokeStyle = wbState.color;
+                wbCtx.lineWidth = wbState.size;
+                wbCtx.beginPath();
+
+                if (wbState.tool === 'line') {
+                    wbCtx.moveTo(wbState.startX, wbState.startY);
+                    wbCtx.lineTo(coords.x, coords.y);
+                } else if (wbState.tool === 'rect') {
+                    wbCtx.strokeRect(
+                        wbState.startX,
+                        wbState.startY,
+                        coords.x - wbState.startX,
+                        coords.y - wbState.startY
+                    );
+                } else if (wbState.tool === 'circle') {
+                    const radius = Math.hypot(coords.x - wbState.startX, coords.y - wbState.startY);
+                    wbCtx.arc(wbState.startX, wbState.startY, radius, 0, Math.PI * 2);
+                }
+                wbCtx.stroke();
+            }
+        }
+
+        function onWbPointerUp() {
+            if (!wbState.drawing) return;
+            wbState.drawing = false;
+            wbCtx.closePath();
+        }
+
+        wbCanvas.addEventListener('mousedown', onWbPointerDown);
+        wbCanvas.addEventListener('mousemove', onWbPointerMove);
+        wbCanvas.addEventListener('mouseup', onWbPointerUp);
+        wbCanvas.addEventListener('mouseleave', onWbPointerUp);
+
+        wbCanvas.addEventListener('touchstart', onWbPointerDown, { passive: false });
+        wbCanvas.addEventListener('touchmove', onWbPointerMove, { passive: false });
+        wbCanvas.addEventListener('touchend', onWbPointerUp);
+
+        document.getElementById('wbTextInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                confirmWbText();
+            } else if (e.key === 'Escape') {
+                cancelWbText();
+            }
+        });
+
+        function confirmWbText() {
+            const textVal = document.getElementById('wbTextInput').value.trim();
+            if (textVal) {
+                saveWbHistory();
+                wbCtx.globalCompositeOperation = 'source-over';
+                wbCtx.fillStyle = wbState.color;
+                wbCtx.font = `bold ${Math.max(16, wbState.size * 5)}px Vazirmatn, Tahoma, sans-serif`;
+                wbCtx.textAlign = 'right';
+                wbCtx.fillText(textVal, wbState.pendingTextX, wbState.pendingTextY);
+            }
+            cancelWbText();
+        }
+
+        function cancelWbText() {
+            document.getElementById('wbTextBox').classList.add('hidden');
+        }
+
+        function setWbTool(tool) {
+            wbState.tool = tool;
+            cancelWbText();
+            document.querySelectorAll('.wb-tool-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-600', 'text-white');
+                btn.classList.add('bg-navy-700', 'text-slate-300');
+            });
+            const active = document.getElementById(`wbTool-${tool}`);
+            active.classList.add('bg-cyan-600', 'text-white');
+            active.classList.remove('bg-navy-700', 'text-slate-300');
+            wbCanvas.style.cursor = tool === 'text' ? 'text' : 'crosshair';
+        }
+
+        function setWbColor(color) {
+            wbState.color = color;
+            if (wbState.tool === 'eraser') setWbTool('pen');
+            document.querySelectorAll('.wb-color-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-cyan-400', 'ring-offset-2', 'ring-offset-navy-800');
+                if (btn.dataset.color === color) {
+                    btn.classList.add('ring-2', 'ring-cyan-400', 'ring-offset-2', 'ring-offset-navy-800');
+                }
+            });
+        }
+
+        function setWbSize(val) {
+            wbState.size = Number(val);
+            document.getElementById('wbSizeLabel').textContent = val;
+        }
+
+        function clearWhiteboard() {
+            saveWbHistory();
+            wbCtx.clearRect(0, 0, wbCanvas.width, wbCanvas.height);
+            showToast('تخته سفید پاک شد.', 'info');
+        }
+
+        function saveWhiteboardPNG() {
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = wbCanvas.width;
+            exportCanvas.height = wbCanvas.height;
+            const eCtx = exportCanvas.getContext('2d');
+            eCtx.fillStyle = '#0c1322';
+            eCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            eCtx.drawImage(wbCanvas, 0, 0);
+
+            const link = document.createElement('a');
+            link.download = `whiteboard-${Date.now()}.png`;
+            link.href = exportCanvas.toDataURL('image/png');
+            link.click();
+            showToast('تصویر تخته سفید با فرمت PNG ذخیره شد.', 'success');
+        }
+
+        // ================= نمایشگر اسلاید و نشانگر لیزری =================
+        function handleSlideUpload(e) {
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+
+            const uploadedSlides = files.map((file, idx) => ({
+                type: 'image',
+                url: URL.createObjectURL(file),
+                name: file.name,
+                index: idx + 1
+            }));
+
+            appState.slides = uploadedSlides;
+            appState.currentSlideIndex = 0;
+            renderCurrentSlide();
+            showToast(`${files.length} اسلاید / تصویر جزوه با موفقیت بارگذاری شد.`, 'success');
+        }
+
+        function renderCurrentSlide() {
+            const wrapper = document.getElementById('slideContentWrapper');
+            const slide = appState.slides[appState.currentSlideIndex];
+            document.getElementById('slideCounterText').textContent = `اسلاید ${appState.currentSlideIndex + 1} از ${appState.slides.length}`;
+
+            if (slide.type === 'image') {
+                wrapper.innerHTML = `
+                    <img src="${slide.url}" alt="${slide.name}" class="max-h-full max-w-full rounded-xl shadow-2xl border border-navy-700 object-contain select-none pointer-events-none">
+                `;
+            } else {
+                wrapper.innerHTML = `
+                    <div class="w-full max-w-3xl bg-gradient-to-br from-navy-800 to-navy-900 border border-navy-700 rounded-2xl p-6 sm:p-10 shadow-2xl flex flex-col justify-between min-h-[280px]">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 text-xs font-semibold">${slide.badge}</span>
+                            <span class="text-xs text-slate-400">استاد فاطمه بادامیان بنه کهل</span>
+                        </div>
+                        <div class="my-auto">
+                            <h3 class="text-lg sm:text-2xl font-extrabold text-white mb-3 leading-relaxed">${slide.title}</h3>
+                            <p class="text-xs sm:text-base text-slate-300 whitespace-pre-line leading-7">${slide.subtitle}</p>
+                        </div>
+                        <div class="border-t border-navy-700 pt-3 mt-6 flex justify-between text-[11px] text-slate-400">
+                            <span>${appState.roomTitle}</span>
+                            <span>صفحه ${appState.currentSlideIndex + 1}</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function prevSlide() {
+            appState.currentSlideIndex = (appState.currentSlideIndex - 1 + appState.slides.length) % appState.slides.length;
+            renderCurrentSlide();
+            if (appState.role === 'teacher') sendRealtime({type:'slideIndex', index:appState.currentSlideIndex});
+        }
+
+        function nextSlide() {
+            appState.currentSlideIndex = (appState.currentSlideIndex + 1) % appState.slides.length;
+            renderCurrentSlide();
+            if (appState.role === 'teacher') sendRealtime({type:'slideIndex', index:appState.currentSlideIndex});
+        }
+
+        function toggleLaserPointer() {
+            appState.laserActive = !appState.laserActive;
+            const btn = document.getElementById('btnLaserToggle');
+            const dot = document.getElementById('laserPointerDot');
+            if (appState.laserActive) {
+                btn.classList.add('bg-red-500/20', 'border-red-500/50', 'text-red-300');
+                showToast('نشانگر لیزری فعال شد. نشانگر ماوس را روی اسلاید حرکت دهید.', 'info');
+            } else {
+                btn.classList.remove('bg-red-500/20', 'border-red-500/50', 'text-red-300');
+                dot.style.display = 'none';
+            }
+        }
+
+        function moveLaser(e) {
+            if (!appState.laserActive) return;
+            const area = document.getElementById('slideDisplayArea');
+            const rect = area.getBoundingClientRect();
+            const dot = document.getElementById('laserPointerDot');
+            dot.style.display = 'block';
+            dot.style.left = (e.clientX - rect.left) + 'px';
+            dot.style.top = (e.clientY - rect.top) + 'px';
+        }
+
+        function hideLaser() {
+            document.getElementById('laserPointerDot').style.display = 'none';
+        }
+
+        // ================= ستون کناری: گفتگو و لیست کاربران =================
+        function switchSidebarTab(tab) {
+            const chatView = document.getElementById('sideView-chat');
+            const usersView = document.getElementById('sideView-users');
+            const chatBtn = document.getElementById('sideTab-chat');
+            const usersBtn = document.getElementById('sideTab-users');
+
+            if (tab === 'chat') {
+                chatView.classList.remove('hidden');
+                usersView.classList.add('hidden');
+                chatBtn.className = 'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-cyan-600 text-white text-xs sm:text-sm font-semibold transition';
+                usersBtn.className = 'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-navy-800 text-slate-300 hover:text-white text-xs sm:text-sm font-medium transition';
+            } else {
+                usersView.classList.remove('hidden');
+                usersView.classList.add('flex');
+                chatView.classList.add('hidden');
+                usersBtn.className = 'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-cyan-600 text-white text-xs sm:text-sm font-semibold transition';
+                chatBtn.className = 'flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-navy-800 text-slate-300 hover:text-white text-xs sm:text-sm font-medium transition';
+                renderParticipants();
+            }
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('classroomSidebar');
+            sidebar.classList.toggle('-translate-x-full');
+            document.getElementById('mobileChatDot').classList.add('hidden');
+        }
+
+        function submitChatMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatInputField');
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMessage(appState.userName, text, appState.role);
+            if (appState.jitsiApi) {
+                try { appState.jitsiApi.executeCommand('sendChatMessage', text); } catch (_) {}
+            }
+            input.value = '';
+        }
+
+        function sendReaction(emoji) {
+            appendMessage(appState.userName, emoji, appState.role);
+            if (emoji === '✋' && appState.role === 'student') {
+                toggleRaiseHand();
+            }
+        }
+
+        function appendMessage(sender, text, senderRole, fromRemote = false) {
+            const box = document.getElementById('chatMessagesBox');
+            if (senderRole === 'system') {
+                const sysDiv = document.createElement('div');
+                sysDiv.className = 'text-center text-[11px] text-slate-400 bg-navy-800/70 py-1.5 px-3 rounded-lg';
+                sysDiv.textContent = text;
+                box.appendChild(sysDiv);
+                box.scrollTop = box.scrollHeight;
+                return;
+            }
+
+            const now = new Date();
+            const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            const isTeacherMsg = senderRole === 'teacher';
+
+            const item = document.createElement('div');
+            item.className = 'flex flex-col items-start';
+            item.innerHTML = `
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span class="text-xs font-bold ${isTeacherMsg ? 'text-cyan-400' : 'text-slate-200'}">${escapeHtml(sender)}</span>
+                    ${isTeacherMsg ? '<span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-bold">استاد</span>' : ''}
+                    <span class="text-[10px] text-slate-500">${time}</span>
+                </div>
+                <div class="${isTeacherMsg ? 'bg-cyan-950/80 border-cyan-500/30 text-white' : 'bg-navy-800 border-navy-700 text-slate-200'} border text-xs sm:text-sm px-3 py-2 rounded-2xl rounded-tr-sm max-w-[90%] break-words leading-relaxed">
+                    ${escapeHtml(text)}
+                </div>
+            `;
+            box.appendChild(item);
+            lucide.createIcons();
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag]));
+        }
+
+        // ================= مدیریت لیست حاضرین و دست‌های بالا رفته =================
+        function renderParticipants() {
+            const box = document.getElementById('usersListBox');
+            box.innerHTML = '';
+            document.getElementById('participantsCount').textContent = appState.participants.length;
+
+            appState.participants.forEach(p => {
+                const isTeacher = p.role === 'teacher';
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between p-2.5 rounded-xl bg-navy-800 border border-navy-700';
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <div class="w-8 h-8 rounded-full ${isTeacher ? 'bg-cyan-500 text-navy-950' : 'bg-navy-700 text-cyan-300'} flex items-center justify-center text-xs font-extrabold shrink-0">
+                            ${p.name.slice(0, 2)}
+                        </div>
+                        <div class="truncate">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs font-semibold text-white truncate">${escapeHtml(p.name)}</span>
+                                ${p.hand ? '<span class="text-sm animate-bounce" title="اجازه سوال">✋</span>' : ''}
+                            </div>
+                            <span class="text-[10px] ${isTeacher ? 'text-cyan-400 font-semibold' : 'text-slate-400'}">
+                                ${isTeacher ? 'استاد و مدیر کلاس' : 'دانشجو'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        ${appState.role === 'teacher' && !isTeacher ? `
+                            <button onclick="toggleParticipantMic('${p.id}')" class="p-1.5 rounded-lg ${p.canSpeak ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-navy-700 text-slate-400 hover:text-white'} transition" title="اجازه صحبت / میکروفون">
+                                <i data-lucide="${p.canSpeak ? 'mic' : 'mic-off'}" class="w-3.5 h-3.5"></i>
+                            </button>
+                        ` : `
+                            <span class="p-1.5 rounded-lg bg-navy-900 ${p.canSpeak ? 'text-emerald-400' : 'text-slate-500'}">
+                                <i data-lucide="${p.canSpeak ? 'mic' : 'mic-off'}" class="w-3.5 h-3.5"></i>
+                            </span>
+                        `}
+                    </div>
+                `;
+                box.appendChild(row);
+            });
+            lucide.createIcons();
+        }
+
+        function toggleParticipantMic(id) {
+            const person = appState.participants.find(p => p.id === id);
+            if (!person) return;
+            person.canSpeak = !person.canSpeak;
+            if (person.canSpeak) person.hand = false;
+            renderParticipants();
+            showToast(person.canSpeak ? `اجازه صحبت به ${person.name} داده شد.` : `دسترسی میکروفون ${person.name} بسته شد.`, 'info');
+        }
+
+        function toggleRaiseHand() {
+            appState.handRaised = !appState.handRaised;
+            const selfUser = appState.participants.find(p => p.isSelf);
+            if (selfUser) selfUser.hand = appState.handRaised;
+
+            const footerBtn = document.getElementById('footerHandBtn');
+            if (appState.handRaised) {
+                footerBtn.classList.add('bg-amber-500/20', 'border-amber-500/50', 'text-amber-300');
+                showToast('دست شما برای اجازه صحبت بالا رفت ✋', 'warning');
+            } else {
+                footerBtn.classList.remove('bg-amber-500/20', 'border-amber-500/50', 'text-amber-300');
+                showToast('دست شما پایین آورده شد.', 'info');
+            }
+            renderParticipants();
+        }
+
+        function clearAllRaisedHands() {
+            appState.participants.forEach(p => p.hand = false);
+            appState.handRaised = false;
+            document.getElementById('footerHandBtn').classList.remove('bg-amber-500/20', 'border-amber-500/50', 'text-amber-300');
+            renderParticipants();
+            showToast('تمامی دست‌های بالا رفته پاک شدند.', 'info');
+        }
+
+        function showSessionMenu(name) { showToast(`بخش «${name}» در این اتاق فعال است.`, 'info'); }
+        function openPollModal() { document.getElementById('pollModal').classList.remove('hidden'); document.getElementById('pollModal').classList.add('flex'); }
+        function closePollModal() { document.getElementById('pollModal').classList.add('hidden'); document.getElementById('pollModal').classList.remove('flex'); }
+        function sendPoll() {
+            const q = document.getElementById('pollQuestion').value.trim();
+            const a = document.getElementById('pollOpt1').value.trim() || 'گزینه ۱';
+            const b = document.getElementById('pollOpt2').value.trim() || 'گزینه ۲';
+            if (!q) return showToast('سؤال نظرسنجی را وارد کنید.', 'warning');
+            const poll = { type:'poll', question:q, options:[a,b], sender:appState.userName };
+            appState.polls.push(poll); sendRealtime(poll); renderIncomingPoll(poll); closePollModal();
+        }
+        function renderIncomingPoll(poll) {
+            const box = document.getElementById('chatMessagesBox');
+            const el = document.createElement('div');
+            el.className = 'bg-navy-800 border border-cyan-500/30 rounded-xl p-3';
+            el.innerHTML = `<div class="text-xs font-bold text-cyan-300 mb-2">نظرسنجی: ${escapeHtml(poll.question)}</div><div class="grid grid-cols-2 gap-2">${poll.options.map((x,i)=>`<button onclick="showToast('پاسخ ${i+1} ثبت شد.','success')" class="px-2 py-2 rounded-lg bg-navy-900 border border-navy-700 text-[11px] text-slate-200">${escapeHtml(x)}</button>`).join('')}</div>`;
+            box.appendChild(el); box.scrollTop = box.scrollHeight;
+        }
+        function openQAModal() { document.getElementById('qaModal').classList.remove('hidden'); document.getElementById('qaModal').classList.add('flex'); }
+        function closeQAModal() { document.getElementById('qaModal').classList.add('hidden'); document.getElementById('qaModal').classList.remove('flex'); }
+        function sendQuestion() {
+            const text = document.getElementById('qaInput').value.trim();
+            if (!text) return showToast('متن سؤال را وارد کنید.', 'warning');
+            const msg = { type:'question', text, sender:appState.userName };
+            appState.questions.push(msg); appendMessage(appState.userName, '❓ ' + text, appState.role); sendRealtime(msg); closeQAModal();
+        }
+        function toggleRecording() {
+            if (appState.role !== 'teacher') return showToast('فقط استاد می‌تواند ضبط جلسه را کنترل کند.', 'warning');
+            if (!appState.jitsiApi) return showToast('اتاق ویدیویی هنوز وصل نشده است.', 'warning');
+            try {
+                if (!appState.recording) {
+                    appState.jitsiApi.executeCommand('startRecording', {mode:'local', onlySelf:false});
+                    showToast('درخواست شروع ضبط صدا و تصویر جلسه ارسال شد. فعال شدن ضبط به قابلیت‌های سرور Jitsi بستگی دارد.', 'success');
+                } else {
+                    appState.jitsiApi.executeCommand('stopRecording', 'local', false);
+                    showToast('درخواست توقف ضبط جلسه ارسال شد.', 'info');
+                }
+            } catch (err) {
+                showToast('ضبط در این سرور/مرورگر در دسترس نیست. اگر ضبط ابری می‌خواهید باید سرور ضبط Jitsi/Jibri یا سرویس مناسب فعال باشد.', 'warning');
+            }
+        }
+
+        // ================= خروج ایمن از کلاس =================
+        function openExitModal() {
+            document.getElementById('exitConfirmModal').classList.remove('hidden');
+            document.getElementById('exitConfirmModal').classList.add('flex');
+        }
+
+        function closeExitModal() {
+            document.getElementById('exitConfirmModal').classList.add('hidden');
+            document.getElementById('exitConfirmModal').classList.remove('flex');
+        }
+
+        function confirmLeaveClass() {
+            closeExitModal();
+            clearInterval(appState.timerInterval);
+            if (appState.jitsiApi) {
+                appState.jitsiApi.dispose();
+                appState.jitsiApi = null;
+            }
+            closeLocalTestOverlay();
+            appState.participantMap = {};
+            appState.participants = [];
+            document.getElementById('classroomApp').classList.add('hidden');
+            document.getElementById('classroomApp').classList.remove('flex');
+            document.getElementById('lobbyScreen').classList.remove('hidden');
+            showToast('شما با موفقیت از کلاس خارج شدید.', 'info');
+        }
+    </script>
+</body>
+</html>
