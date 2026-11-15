@@ -848,12 +848,17 @@
             // شروع تایمر کلاس
             startClassTimer();
 
-            // ابتدا از مرورگر مجوز دوربین و میکروفون را درخواست می‌کنیم.
-            // حتی اگر یکی از مجوزها رد شود، ورود به کلاس متوقف نمی‌شود.
-            requestMediaPermissions().finally(() => {
-                // راه‌اندازی Jitsi Meet API
-                initJitsiRoom();
-            });
+            // برای استاد، به‌دلیل احراز هویت اجباری سازنده اتاق در meet.jit.si،
+            // جلسه را مستقیماً در تب مرورگر باز می‌کنیم تا صفحه ورود Jitsi
+            // داخل iframe گیر نکند. دانشجو همچنان می‌تواند داخل همین سایت وارد شود.
+            if (appState.role === 'teacher') {
+                openHostJitsiRoom();
+            } else {
+                // برای دانشجو، همان اتصال داخلی سایت حفظ می‌شود.
+                requestMediaPermissions().finally(() => {
+                    initJitsiRoom();
+                });
+            }
 
             // پیام خوش‌آمدگویی در چت
             appendMessage('سیستم', `${appState.userName} وارد کلاس شد.`, 'system');
@@ -872,6 +877,25 @@
                 const s = String(appState.secondsElapsed % 60).padStart(2, '0');
                 document.getElementById('classTimer').textContent = `${h}:${m}:${s}`;
             }, 1000);
+        }
+
+        // ورود مستقیم استاد به جلسه Jitsi
+        // meet.jit.si از سازنده اتاق احراز هویت می‌خواهد؛ باز کردن مستقیم
+        // صفحه جلسه باعث می‌شود ورود/احراز هویت Jitsi داخل iframe گیر نکند.
+        function openHostJitsiRoom() {
+            const roomKey = makeRoomKey(appState.roomTitle);
+            const safeRoomSlug = 'BadamianAcademy_' + roomKey;
+            const meetingUrl = 'https://meet.jit.si/' + safeRoomSlug;
+            appState.hostMeetingUrl = meetingUrl;
+
+            const opened = window.open(meetingUrl, '_blank', 'noopener,noreferrer');
+            if (!opened) {
+                showToast('مرورگر اجازه باز کردن پنجره جدید را نداد؛ جلسه در همین صفحه باز می‌شود.', 'warning');
+                window.location.href = meetingUrl;
+                return;
+            }
+            document.getElementById('sessionStatus').textContent = 'جلسه استاد در تب جدید باز شد';
+            showToast('جلسه استاد باز شد. اگر Jitsi درخواست ورود کرد، با حساب خود وارد شوید.', 'success');
         }
 
         // ================= اتصال واقعی به Jitsi Meet API =================
@@ -900,43 +924,6 @@
             // نام اتاق فقط با حروف/عدد انگلیسی ساخته می‌شود تا در همه مرورگرها پایدار باشد.
             const roomKey = makeRoomKey(appState.roomTitle);
             const safeRoomSlug = 'BadamianAcademy_' + roomKey;
-
-            // نکته مهم: در meet.jit.si ساخت اتاق برای ایجادکننده نیازمند احراز هویت است.
-            // احراز هویت داخل iframe می‌تواند با محدودیت‌های مرورگر/کوکی شخص ثالث
-            // به خطای Network/Auth منجر شود. برای استاد، صفحه اصلی Jitsi را در
-            // سطح اصلی مرورگر باز می‌کنیم تا ورود GitHub/Google در همان مرورگر انجام شود.
-            // دانشجو همچنان از API داخل همین سایت وارد می‌شود و هیچ قابلیت دیگری حذف نشده است.
-            if (appState.role === 'teacher') {
-                const directUrl = `https://meet.jit.si/${encodeURIComponent(safeRoomSlug)}`;
-                container.innerHTML = `
-                    <div class="h-full flex items-center justify-center p-5 sm:p-8 text-center">
-                        <div class="max-w-xl w-full rounded-2xl border border-cyan-500/30 bg-navy-900/80 p-5 sm:p-7 shadow-2xl">
-                            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-cyan-500/15 text-cyan-300 flex items-center justify-center">
-                                <i data-lucide="shield-check" class="w-7 h-7"></i>
-                            </div>
-                            <h3 class="text-lg sm:text-xl font-extrabold text-white mb-3">ورود امن استاد به اتاق ویدیویی</h3>
-                            <p class="text-xs sm:text-sm text-slate-300 leading-7 mb-4">
-                                برای استاد، ورود به meet.jit.si باید در صفحه اصلی سرویس انجام شود؛ ورود داخل قاب این سایت ممکن است با خطای احراز هویت یا Network Error متوقف شود.
-                            </p>
-                            <a href="${directUrl}" target="_blank" rel="noopener noreferrer"
-                               class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition">
-                                <i data-lucide="video" class="w-5 h-5"></i>
-                                ورود به اتاق به‌عنوان میزبان
-                            </a>
-                            <button type="button" onclick="copyJitsiHostLink('${directUrl.replace(/'/g, "\\'")}')"
-                               class="mt-2 inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-200 border border-navy-700 font-semibold transition">
-                                <i data-lucide="copy" class="w-4 h-4"></i>
-                                کپی لینک اتاق میزبان
-                            </button>
-                            <p class="text-[11px] text-slate-500 mt-4 leading-6">
-                                اگر Jitsi از شما ورود خواست، با حساب Google یا GitHub وارد شوید و سپس به اتاق برگردید.
-                            </p>
-                        </div>
-                    </div>`;
-                lucide.createIcons();
-                document.getElementById('sessionStatus').textContent = 'آماده ورود امن میزبان به Jitsi';
-                return;
-            }
 
             if (typeof JitsiMeetExternalAPI === 'undefined') {
                 container.innerHTML = `<div class="h-full flex items-center justify-center p-6 text-center"><div><p class="text-sm text-amber-300 font-semibold mb-2">Jitsi در این مرورگر در دسترس نیست.</p><p class="text-xs text-slate-400">این صفحه باید روی هاست دارای اینترنت و با HTTPS اجرا شود.</p></div></div>`;
@@ -980,21 +967,6 @@
             } catch (err) {
                 document.getElementById('sessionStatus').textContent = 'خطا در اتصال به اتاق ویدیویی';
                 openLocalTestOverlay();
-            }
-        }
-
-        function copyJitsiHostLink(url) {
-            try {
-                navigator.clipboard.writeText(url).then(() => {
-                    showToast('لینک ورود میزبان کپی شد.', 'success');
-                }).catch(() => {
-                    const t = document.createElement('textarea');
-                    t.value = url; document.body.appendChild(t); t.select();
-                    document.execCommand('copy'); document.body.removeChild(t);
-                    showToast('لینک ورود میزبان کپی شد.', 'success');
-                });
-            } catch (_) {
-                showToast('کپی لینک انجام نشد؛ می‌توانید روی «ورود به اتاق» بزنید.', 'warning');
             }
         }
 
